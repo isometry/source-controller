@@ -120,7 +120,7 @@ func (b *localChartBuilder) Build(ctx context.Context, ref Reference, p string, 
 			if err = curMeta.Validate(); err == nil {
 				if result.Name == curMeta.Name && result.Version == curMeta.Version {
 					result.Path = opts.CachedChart
-					result.ValuesFiles = opts.GetValuesFiles()
+					result.ValuesFiles = opts.ObservedValuesFiles
 					result.Packaged = requiresPackaging
 
 					return result, nil
@@ -145,7 +145,7 @@ func (b *localChartBuilder) Build(ctx context.Context, ref Reference, p string, 
 		valuesFiles  []string
 	)
 	if len(opts.GetValuesFiles()) > 0 {
-		if mergedValues, valuesFiles, err = mergeFileValues(localRef.WorkDir, opts.ValuesFiles, opts.IgnoreMissingValuesFiles); err != nil {
+		if mergedValues, valuesFiles, err = mergeFileValues(localRef.WorkDir, opts.GetValuesFiles(), opts.IgnoreMissingValuesFiles); err != nil {
 			return result, &BuildError{Reason: ErrValuesFilesMerge, Err: err}
 		}
 	}
